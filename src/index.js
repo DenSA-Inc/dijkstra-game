@@ -1,5 +1,6 @@
 import React from "react";
 import { render } from "react-dom";
+import { Provider } from "react-redux";
 
 import Edge from "./ui/edge";
 import Vertex from "./ui/vertex";
@@ -7,6 +8,8 @@ import Player from "./ui/player";
 
 import "./style.css";
 import { VIEWBOX_PADDING } from "./constants";
+
+import makeStore from "./store";
 
 import Graph from "./lib/graph";
 const graphData = require("./level.json");
@@ -22,15 +25,18 @@ class Level extends React.Component {
       pos: this.graph.getStartingIndex()
     };
     this.buffer = null;
+    this.store = makeStore();
   }
 
   render() {
     return (
-      <svg viewBox={this.getViewBox()} id="level">
-        {this.graph.getEdges().map(this.renderEdge.bind(this))}
-        {this.graph.getVertices().map(this.renderVertex.bind(this))}
-        {this.renderPlayer.bind(this)()}
-      </svg>
+      <Provider store={this.store}>
+        <svg viewBox={this.getViewBox()} id="level">
+          {this.graph.getEdges().map(this.renderEdge.bind(this))}
+          {this.graph.getVertices().map(this.renderVertex.bind(this))}
+          {this.renderPlayer.bind(this)()}
+        </svg>
+      </Provider>
     );
   }
 
