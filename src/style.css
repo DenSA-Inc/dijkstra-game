@@ -1,0 +1,83 @@
+:root {
+  --background-color: Black;
+  --primary-color: #2962FF;
+  --player-color: #D50000;
+  --player-animation-duration: 0.8s;
+  --text-color: White;
+
+  --edge-width: 2px;
+  --edge-weigth-width: 2px;
+  --vertice-width: 2px;
+}
+
+* {
+  margin: 0px;
+  padding: 0px;
+}
+
+html, body, #root {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  overflow: hidden;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+#level {
+  width: 100vw;
+  height: 100vh;
+
+  min-width: 400px;
+  min-height: 225px;
+  max-height: 600px;
+}
+
+#level text {
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+}
+
+#level line {
+  stroke: var(--primary-color);
+  stroke-width: var(--edge-width);
+}
+
+.vertice circle {
+  stroke: var(--primary-color);
+  stroke-width: var(--vertice-width);
+}
+
+.vertice-text {
+  fill: var(--text-color);
+  font-size: 17.5px;
+  transform: translateY(6px);
+}
+
+body {
+  background-color: var(--background-color);
+}
+
+#player-icon {
+  fill: var(--player-color);
+  transition: transform var(--player-animation-duration) ease;
+}
+
+.edge-weigth {
+  stroke: var(--primary-color);
+  stroke-width: var(--edge-weigth-width);
+}
+
+.edge-weigth-text {
+  fill: var(--text-color);
+  font-size: 10px;
+  transform: translateY(3px);
+  text-anchor: middle;
+}
