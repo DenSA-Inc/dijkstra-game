@@ -1,14 +1,18 @@
 import React from "react";
+import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
 import { PLAYER_ICON_RADIUS, PLAYER_MOVE_SOUND } from "../constants";
 
-export default class Player extends React.Component {
+export default connect(
+  state => ({volume: state.options.volume})
+)(class Player extends React.Component {
   static propTypes = {
     x: PropTypes.number.isRequired,
     y: PropTypes.number.isRequired,
     onMovingStart: PropTypes.func.isRequired,
-    onMovingEnded: PropTypes.func.isRequired
+    onMovingEnded: PropTypes.func.isRequired,
+    volume: PropTypes.number.isRequired
   }
 
   // The player-icon looks more in-place with this offset
@@ -23,7 +27,7 @@ export default class Player extends React.Component {
     }
 
     this.audio = new Audio(PLAYER_MOVE_SOUND);
-    this.audio.volume = 0.35;
+    this.audio.volume = 0.35 * this.props.volume;
   }
 
   componentWillReceiveProps(newprops){
@@ -31,13 +35,14 @@ export default class Player extends React.Component {
       x: newprops.x,
       y: newprops.y
     });
+    this.audio.volume = 0.35 * newprops.volume;
   }
 
   componentDidUpdate(prevProps, prevState){
     if (this.props.x !== prevProps.x || this.props.y !== prevProps.y){
       this.props.onMovingStart();
+      this.audio.play();
     }
-    this.audio.play();
   }
 
   render(){
@@ -49,4 +54,4 @@ export default class Player extends React.Component {
       <circle cx={0} cy={0} r={PLAYER_ICON_RADIUS}/>
     </g>;
   }
-}
+});

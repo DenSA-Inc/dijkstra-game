@@ -10,6 +10,7 @@ import "./style.css";
 import { VIEWBOX_PADDING } from "./constants";
 
 import makeStore from "./store";
+import gameReducer from "./reducers";
 
 import Graph from "./lib/graph";
 const graphData = require("./level.json");
@@ -25,7 +26,7 @@ class Level extends React.Component {
       pos: this.graph.getStartingIndex()
     };
     this.buffer = null;
-    this.store = makeStore();
+    this.store = makeStore(gameReducer);
   }
 
   render() {
