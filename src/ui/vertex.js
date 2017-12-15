@@ -1,12 +1,16 @@
 import React from "react";
+import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
 import { VERTICE_RADIUS } from "../constants";
 
-export default class Vertex extends React.Component {
+export default connect(
+  state => ({traversed: state.level.traversed})
+)(class Vertex extends React.Component {
   static propTypes = {
     vertex: PropTypes.object.isRequired,
     onClick: PropTypes.func.isRequired,
+    traversed: PropTypes.number.isRequired
   }
 
   render(){
@@ -22,4 +26,4 @@ export default class Vertex extends React.Component {
       <text x={v.getX()} y={v.getY()} className="vertice-text" textAnchor="middle"></text>
     </g>;
   }
-}
+});

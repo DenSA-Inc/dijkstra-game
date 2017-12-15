@@ -1,6 +1,6 @@
 import React from "react";
 import { render } from "react-dom";
-import { Provider } from "react-redux";
+import { Provider, connect } from "react-redux";
 
 import Edge from "./ui/edge";
 import Vertex from "./ui/vertex";
@@ -12,8 +12,10 @@ import { VIEWBOX_PADDING } from "./constants";
 import makeStore from "./store";
 import gameReducer from "./reducers";
 
+import { traversed } from "./actions";
+
 import Graph from "./lib/graph";
-const graphData = require("./level.json");
+import graphData from "./level.json";
 
 class Level extends React.Component {
   constructor(props) {
@@ -26,18 +28,15 @@ class Level extends React.Component {
       pos: this.graph.getStartingIndex()
     };
     this.buffer = null;
-    this.store = makeStore(gameReducer);
   }
 
   render() {
     return (
-      <Provider store={this.store}>
-        <svg viewBox={this.getViewBox()} id="level">
-          {this.graph.getEdges().map(this.renderEdge.bind(this))}
-          {this.graph.getVertices().map(this.renderVertex.bind(this))}
-          {this.renderPlayer.bind(this)()}
-        </svg>
-      </Provider>
+      <svg viewBox={this.getViewBox()} id="level">
+        {this.graph.getEdges().map(this.renderEdge.bind(this))}
+        {this.graph.getVertices().map(this.renderVertex.bind(this))}
+        {this.renderPlayer.bind(this)()}
+      </svg>
     );
   }
 
@@ -53,9 +52,12 @@ class Level extends React.Component {
   makeMove(i){
     const v = this.graph.getVertex(i);
 
-    if (!this.graph.verticesConnected(this.graph.getVertex(this.state.pos), v)) {
+    const connection = this.graph.verticesConnected(this.graph.getVertex(this.state.pos), v);
+    if (!connection) {
       return;
     }
+
+    this.props.dispatch(traversed(connection));
     if (!this.playerMoving) {
       this.setState({ pos: i });
     }
@@ -114,4 +116,7 @@ class Level extends React.Component {
   }
 }
 
-render(<Level graph={graphData} />, document.getElementById("root"));
+let ConnectedLevel = connect()(Level) // pray it's not 1&1
+let store = makeStore(gameReducer);
+
+render(<Provider store={store}><ConnectedLevel graph={graphData} /></Provider>, document.getElementById("root"));
